@@ -1,0 +1,188 @@
+from flask import Flask, request
+import json
+import requests
+
+app = Flask(__name__)
+
+FB_VERIFY_TOKEN = 'my_voice_is_my_password_verify_me'
+# This needs to be filled with the Page Access Token that will be provided
+# by the Facebook App that will be created.
+FB_ACCESS_TOKEN = 'EAAc40Cs86ZBQBADNcz23SZClcQGphcTpId1arZCacHOsybdXbgZBH8PXwMZCZBKLzPHJuRBNYDZArU65BV3scZCfenOrkGf2Fjyl6RF93wA1NELCX2tVkChVvZCMZCGNIan5R1hf0nrAatw6ckotVIknRZCo4UNFjrVGtcWNZBVJHQpUnmBb8AvbxPfh'
+
+# from Pycharm
+bot_template = "BOT :"
+user_template = "USER: "
+
+location_city = ""
+location_district = ""
+neighbourhood = ""
+intention = ""
+type_of_re = ""
+rooms_no = ""
+value = ""
+size = ""
+features = ""
+media = ""
+security = ""
+standard = ""
+duration = ""
+start_date = ""
+
+profile_elements = [location_city, location_district, neighbourhood, intention,
+                    type_of_re, rooms_no, value, size,
+                    features, media, security, standard, duration,
+                    start_date]
+
+menu_options = ["city", "district", "neighbourhood (1. calm OR 2. lively)",
+                "intention (1. buy OR 2. rent OR 3. invest)",
+                "duration", "type", "number of rooms", "value/price range", "size", "features",
+                "media", "security", "standard", "starting date"]
+
+@app.route('/', methods=['GET'])
+def handle_verification():
+	print ("Handling Verification.")
+	if request.args.get('hub.verify_token', '') == 'my_voice_is_my_password_verify_me':
+	    print ("Verification successful!")
+	    return request.args.get('hub.challenge', '')
+	else:
+	    print ("Verification failed!")
+	    return 'Error, wrong validation token'
+
+@app.route('/', methods=['POST'])
+def handle_messages():
+	print ("Handling Messages")
+	payload = request.get_data()
+	### this could be a new function
+	print (type(payload))
+	string_payload = payload.decode("utf-8")
+	print(type(string_payload))
+	dict = json.loads(string_payload)
+	print(type(dict))
+	print("this is the whole dictionary:\n", dict)
+	print("ONLY dict, entry:\n", dict["entry"])
+	print("ONLY dict, entry, IN:\n", dict["entry"][0])
+	print("ONLY dict, entry, messaging:\n", dict["entry"][0]["messaging"])
+	print("ONLY dict, entry, messaging, IN:\n", dict["entry"][0]["messaging"][0])
+	print("ONLY dict, entry, messaging, message:\n", dict["entry"][0]["messaging"][0]["message"])
+	print("ONLY dict, entry, messaging, message, TEXT:\n", dict["entry"][0]["messaging"][0]["message"]["text"])
+	user_text = dict["entry"][0]["messaging"][0]["message"]["text"]
+	# let us see whether this works...!!!...
+	if user_text == "quit":
+		print("user said quit.")
+		my_send_message(FB_ACCESS_TOKEN, "1803113719726092", "END/\n I do not know how to end program")
+	elif user_text == "ok":
+		print("PROGRAM CONTINUE NOW WHAT??????????!!!")
+		my_send_message(FB_ACCESS_TOKEN, "1803113719726092", "CONTINUE")
+		print("Cool, so now we will build your profile:")
+		print("1.  city + district")
+		print("2.  neighbourhood")
+		print("3.  intention (buy or rent) + duration")
+		print("4.  type")
+		print("5.  number of rooms")
+		print("6.  value/price range")
+		print("7.  size")
+		print("8.  features")
+		print("9.  media")
+		print("10. security")
+		print("11. standard")
+		print("12. starting date")
+		my_send_message(FB_ACCESS_TOKEN, "1803113719726092", "Cool, so now we will build your profile:")
+		my_send_message(FB_ACCESS_TOKEN, "1803113719726092", "1.  city + district   " +
+              "2.  neighbourhood   " +
+              "3.  intention (buy or rent) + duration   " +
+              "4.  type   " +
+              "5.  number of rooms   " +
+              "6.  value/price range   " +
+              "7.  size   " +
+              "8.  features   " +
+              "9.  media   " +
+              "10. security   " +
+              "11. standard   " +
+              "12. starting date   ")
+		print("GO THROUGH LIST. distance in km, price in zl, time in years. For price range add upper limit.")
+		print("Units should not need be added, except for size, specify \"k\" for km and \"m\" for m,")
+		print("Dates in format: day.month.year.")
+		my_send_message(FB_ACCESS_TOKEN, "1803113719726092", "GO THROUGH LIST. distance in km, price in zl, time in years. For price range add upper limit.")
+		my_send_message(FB_ACCESS_TOKEN, "1803113719726092", "Units should not need be added, except for size, specify \"k\" for km and \"m\" for m,")
+		my_send_message(FB_ACCESS_TOKEN, "1803113719726092", "Dates in format: day.month.year.")
+		'''
+            for i in range(0, len(menu_options)):
+	        """ make sure that numbers are entered where they should be!!!"""
+	        if i == 5:
+	            print(type)
+	        ### GO THROUGH LIST AND SAVE PREFERENCES
+	        ### then print them out for user and give option to change.
+	        ### then seearch website --> no clue how that works!!!
+	        ### make more mini menus!!!
+	        print(menu_options[i] + ":")
+	        profile_elements[i] = input("USER: ")
+	        if profile_elements[i] == "quit":
+	            end_yes = True
+	            break
+	    '''
+		# now what?
+	else:
+		print("something else")
+		my_send_message(FB_ACCESS_TOKEN, "1803113719726092", "Could you please repeat that?")
+	### this could be a new function
+	for sender, message in messaging_events(payload):
+	    print ("Incoming from %s: %s" % (sender, message))
+	    # did I disable the echo. That would be a major breakthrough
+	    # presuming that something else works?????!!!
+	    # send_message(FB_ACCESS_TOKEN, sender, message)
+	return "ok"
+
+def messaging_events(payload):
+	"""Generate tuples of (sender_id, message_text) from the
+	provided payload.
+	"""
+	data = json.loads(payload)
+	messaging_events = data["entry"][0]["messaging"]
+	for event in messaging_events:
+	    if "message" in event and "text" in event["message"]:
+	      	yield event["sender"]["id"], event["message"]["text"].encode('unicode_escape')
+	    else:
+	      	yield event["sender"]["id"], "I can't echo this"
+
+
+def send_message(token, recipient, text):
+	"""Send the message text to recipient with id recipient.
+	"""
+
+	r = requests.post("https://graph.facebook.com/v2.6/me/messages",
+	    params={"access_token": token},
+	    data=json.dumps({
+	      "recipient": {"id": recipient},
+	      "message": {"text": text.decode('unicode_escape')}
+	    }),
+	    headers={'Content-type': 'application/json'})
+	if r.status_code != requests.codes.ok:
+	    print (r.text)
+
+### my functions
+def my_send_message(token, recipient, text):
+	"""Send the message text to recipient with id recipient.
+	"""
+
+	r = requests.post("https://graph.facebook.com/v2.6/me/messages",
+	    params={"access_token": token},
+	    data=json.dumps({
+	      "recipient": {"id": recipient},
+	      "message": {"text": text}
+	    }),
+	    headers={'Content-type': 'application/json'})
+	if r.status_code != requests.codes.ok:
+	    print (r.text)
+
+# main run? below
+if __name__ == '__main__':
+	print(bot_template, "Hello, welcome to the otodom.pl chatbot. I am here to assist you in finding a real estate.")
+	print(bot_template, "1. To exit, type \"quit\" anytime.")
+	print(bot_template, "2. Say \"ok\" if you want to create a profile so that I can help you find the best possible "
+                    "real estate!")
+	my_send_message(FB_ACCESS_TOKEN, "1803113719726092", "Hello, welcome to the otodom.pl chatbot. I am here to assist you in finding real estate.")
+	# change the texts slightly so that it doesn't say "type" for example
+	# obviously after you have gotten the stupid buttons to work
+	my_send_message(FB_ACCESS_TOKEN, "1803113719726092", "1. To exit, type \"quit\" anytime.")
+	my_send_message(FB_ACCESS_TOKEN, "1803113719726092", "2. Say \"ok\" if you want to create a profile so that I can help you find the best possible real estate!")
+	app.run()
