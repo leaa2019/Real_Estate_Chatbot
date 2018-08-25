@@ -1,0 +1,170 @@
+# from maybe_IA.py import *
+# testing whether the above works... --> it does yippe...
+
+bot_template = "BOT :"
+user_template = "USER: "
+
+start = True
+
+location_city = ""
+location_district = ""
+neighbourhood = ""
+intention = ""
+type = ""
+rooms_no = ""
+value = ""
+size = ""
+features = ""
+media = ""
+security = ""
+standard = ""
+duration = ""
+start_date = ""
+
+profile_elements = [location_city, location_district, neighbourhood, intention,
+                    type, rooms_no, value, size,
+                    features, media, security, standard, duration,
+                    start_date]
+
+menu_options = ["city", "district", "neighbourhood (1. calm OR 2. lively)",
+                "intention (1. buy OR 2. rent OR 3. invest)",
+                "duration", "type", "number of rooms", "value/price range", "size", "features",
+                "media", "security", "standard", "starting date"]
+
+type = ["1. flat",
+        "2. house",
+        "3. room",
+        "4. land",
+        "5. commercial premise",
+        "6. warehouse",
+        "7. garage",
+        "8. anything",
+        "9. investment opportunities"
+        ]
+
+while start:
+    print(bot_template, "Hello, welcome to the otodom.pl chatbot. I am here to assist you in finding a real estate.")
+    print(bot_template, "1. To exit, type \"quit\" anytime.")
+    print(bot_template, "2. Say \"ok\" if you want to create a profile so that I can help you find the best possible "
+                        "real estate!")
+    print(bot_template, "3. To have a relaxed chat, type \"chat\".")
+    user = input(user_template)
+    if user == "quit":
+        start = False
+    elif user == "ok":
+        # start loop for profile building
+        profile = True
+        while profile:
+            print("Cool, so now we will build your profile:")
+
+            print("\n1.  city + district"
+                  "\n2.  neighbourhood"
+                  "\n3.  intention (buy or rent) + duration"
+                  "\n4.  type"
+                  "\n5.  number of rooms"
+                  "\n6.  value/price range"
+                  "\n7.  size"
+                  "\n8.  features"
+                  "\n9.  media"
+                  "\n10. security"
+                  "\n11. standard"
+                  "\n12. starting date")
+            print("Type \"yes\" if you want to go through all options.")
+            print("Otherwise please select a number from the list that you would like to start with.")
+            user = input("USER: ")
+            if user == "yes":
+                end_yes = False
+                user_complete_profile = {}
+                # is the above necessary?
+                print("GO THROUGH LIST. distance in km, price in zl, time in years. For price range add upper limit."
+                      "\nUnits should not need be added, except for size, specify \"k\" for km and \"m\" for m,"
+                      "\nDates in format: day.month.year.")
+                #  go_through_list = True
+                for i in range(0, len(menu_options)):
+                    """ make sure that numbers are entered where they should be!!!"""
+                    if i == 5:
+                        print(type)
+                    ### GO THROUGH LIST AND SAVE PREFERENCES
+                    ### then print them out for user and give option to change.
+                    ### then seearch website --> no clue how that works!!!
+                    ### make more mini menus!!!
+                    print(menu_options[i] + ":")
+                    profile_elements[i] = input("USER: ")
+                    if profile_elements[i] == "quit":
+                        end_yes = True
+                        break
+                    ### print(profile_elements)
+                if end_yes:
+                    break
+                print("You have set up a profile. This is what you entered:")
+                print("\n1.  city + district:", profile_elements[0], "+", profile_elements[1] +
+                      "\n2.  neighbourhood (1. calm OR 2. lively):", profile_elements[2] +
+                      "\n3.  intention (1. buy OR 2. rent OR 3. invest) + duration:", profile_elements[3], "+",
+                      profile_elements[4] +
+                      "\n4.  type:", profile_elements[5] +
+                      "\n5.  number of rooms:", profile_elements[6] +
+                      "\n6.  value/price range:", profile_elements[7] +
+                      "\n7.  size:", profile_elements[8] +
+                      "\n8.  features:", profile_elements[9] +
+                      "\n9.  media:", profile_elements[10] +
+                      "\n10. security:", profile_elements[11] +
+                      "\n11. standard:", profile_elements[12] +
+                      "\n12. starting date:", profile_elements[13])
+                print("Enter \"s\" to search for the options above")
+                print("If you want to change one of the above, enter \"c\"")
+                user = input("USER: ")
+                profile_ending = True
+                while profile_ending:
+                    if user == "quit":
+                        break
+                    elif user == "s":
+                        print("please wait a minute, while I search for possible options.")
+                        # def function for searching each element. there should be 14 methods!!!
+                        print("FUNCTION FOUND (NUMBER) RESULTS. HERE ARE 3 THAT BEST MATCH YOUR PREFERENCES (SHOW)"
+                              "PLEASE CLICK THIS LINK (LINK) TO SEE OTHER RESULTS.")
+                        break
+                    elif user == "c":
+                        print("THIS STILL NEEDS TO BE CODED!!!")
+                        print("Probably copy from the personalised profile.")
+                        ## code, how to change specific stuff. Probably copy from the personalised profile.
+                        break
+                    else:
+                        print("Could you please repeat that?")
+                        user = input("USER: ")
+                        continue
+                start = False
+                break
+            ###
+            # this will be for the personalised profile option!
+            ### for the others: same as above but every time rule out an option.
+            if user == "1":
+                print("1")
+            elif user == "2":
+                print("2")
+            elif user == "quit":
+                break
+            else:
+                print("else")
+    elif user == "chat":
+        # bring in other code to work on converstaion bot. Do DataCamp course for that!!!
+        print("THIS IS WHERE IT GETS SUUUUPER COMPLICATED!")
+    else:
+        print("Could you please repeat that?")
+
+### create a user profile
+'''
+location_city
+location_district
+neighbourhood
+intention
+type
+rooms_no
+value
+size
+features
+media
+security
+standard
+duration
+start_date
+'''
